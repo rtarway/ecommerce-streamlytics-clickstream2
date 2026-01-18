@@ -19,7 +19,9 @@ package com.beamlytics.inventory.pipelines.test;
 
 import org.apache.beam.sdk.options.PipelineOptionsFactory;
 import org.apache.beam.sdk.testing.TestPipeline;
+import org.apache.beam.sdk.transforms.MapElements;
 import org.apache.beam.sdk.values.PCollectionTuple;
+import org.apache.beam.sdk.values.TypeDescriptors;
 import org.joda.time.Instant;
 import org.junit.Rule;
 import org.junit.Test;
@@ -28,6 +30,7 @@ import org.junit.runners.JUnit4;
 
 import com.beamlytics.inventory.businesslogic.core.options.RetailPipelineOptions;
 import com.beamlytics.inventory.pipelines.RetailDataProcessingPipeline;
+import com.google.gson.Gson;
 
 @RunWith(JUnit4.class)
 public class RetailDataProcessingPipelineSimpleSmokeTest {
@@ -38,9 +41,12 @@ public class RetailDataProcessingPipelineSimpleSmokeTest {
 
   {
     options.setTestModeEnabled(true);
+    options.setRedisHost("localhost"); // Set dummy host/port to avoid nulls
+    options.setRedisPort(6379);
   }
 
-  @Rule public transient TestPipeline pipeline = TestPipeline.fromOptions(options);
+  @Rule
+  public transient TestPipeline pipeline = TestPipeline.fromOptions(options);
 
   @Test
   public void testPipeline() throws Exception {
@@ -49,13 +55,15 @@ public class RetailDataProcessingPipelineSimpleSmokeTest {
 
     PCollectionTuple inputs = pipeline.apply(new TestStreamGenerator());
 
-    retailDataProcessingPipeline.testClickstreamEvents =
-        inputs.get(TestStreamGenerator.CLICKSTREAM);
+    // Convert ClickStreamEvent objects to JSON Strings because the new pipeline
+    // expects Strings (PubSub/File)
+    retailDataProcessingPipeline.testClickstreamEvents = inputs.get(TestStreamGenerator.CLICKSTREAM)
+        .apply("ConvertClicksToJson", MapElements.into(TypeDescriptors.strings())
+            .via(event -> new Gson().toJson(event)));
 
-   retailDataProcessingPipeline.testTransactionEvents =
-       inputs.get(TestStreamGenerator.TRANSACTION);
+    retailDataProcessingPipeline.testTransactionEvents = inputs.get(TestStreamGenerator.TRANSACTION);
 
-       retailDataProcessingPipeline.testStockEvents = inputs.get(TestStreamGenerator.STOCK);
+    retailDataProcessingPipeline.testStockEvents = inputs.get(TestStreamGenerator.STOCK);
 
     retailDataProcessingPipeline.startRetailPipeline(pipeline);
   }

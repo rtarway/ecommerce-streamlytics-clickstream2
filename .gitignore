@@ -36,3 +36,10 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+### Secrets ###
+*.json
+*.key
+.env
+*.log
+credentials/
