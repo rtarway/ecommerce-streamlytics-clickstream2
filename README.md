@@ -19,15 +19,15 @@ The system utilizes a **Stateful Unified Processing Model** that forks into two 
 graph TD
     POS[POS Store] --> |PubSub| U[Unify]
     ECOM[Ecom Web] --> |PubSub| U
-    WMS[Warehouse] --> |PubSub/Batch| U
+    WMS[Warehouse] --> |"PubSub/Batch"| U
     
-    U[Unified Event Stream] --> K[KeyBy Store:Product]
+    U["Unified Event Stream"] --> K["KeyBy Store:Product"]
     
-    K --> |Branch A: Consistency| STATE[InventoryStatefulFn]
-    STATE --> |Absolute Count| R1[Redis: Stock]
+    K --> |"Branch A: Consistency"| STATE[InventoryStatefulFn]
+    STATE --> |"Absolute Count"| R1["Redis: Stock"]
     
-    K --> |Branch B: Intelligence| VELOCITY[SmartVelocityFn]
-    VELOCITY --> |Smart Signal| R2[Redis: Signals]
+    K --> |"Branch B: Intelligence"| VELOCITY[SmartVelocityFn]
+    VELOCITY --> |"Smart Signal"| R2["Redis: Signals"]
 ```
 
 ### Key Components
