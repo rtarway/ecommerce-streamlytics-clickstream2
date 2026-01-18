@@ -17,17 +17,22 @@ The system utilizes a **Stateful Unified Processing Model** that forks into two 
 
 ```mermaid
 graph TD
+    subgraph Sources
     POS[POS Store] --> |PubSub| U[Unify]
     ECOM[Ecom Web] --> |PubSub| U
-    WMS[Warehouse] --> |"PubSub/Batch"| U
+    WMS[Warehouse] --> |PubSub/Batch| U
+    end
+
+    U --> |UnifiedInventoryEvent| K[KeyBy Store:Product]
     
-    U["Unified Event Stream"] --> K["KeyBy Store:Product"]
+    K --> |Branch A| STATE[InventoryStatefulFn]
+    STATE --> |KV<Key, Count>| R1[Redis: Stock]
     
-    K --> |"Branch A: Consistency"| STATE[InventoryStatefulFn]
-    STATE --> |"Absolute Count"| R1["Redis: Stock"]
+    K --> |Branch B| VELOCITY[SmartVelocityFn]
+    VELOCITY --> |KV<Key, Signal>| R2[Redis: Velocity]
     
-    K --> |"Branch B: Intelligence"| VELOCITY[SmartVelocityFn]
-    VELOCITY --> |"Smart Signal"| R2["Redis: Signals"]
+    style STATE fill:#f9f,stroke:#333
+    style VELOCITY fill:#bbf,stroke:#333
 ```
 
 ### Key Components
