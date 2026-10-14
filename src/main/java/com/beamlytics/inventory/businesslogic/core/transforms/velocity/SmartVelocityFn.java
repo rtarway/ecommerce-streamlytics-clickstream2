@@ -9,11 +9,14 @@ import org.apache.beam.sdk.transforms.DoFn;
 import org.apache.beam.sdk.values.KV;
 import org.joda.time.Instant;
 
+import java.io.Serializable;
 import java.util.Map;
 
 public class SmartVelocityFn extends DoFn<KV<String, UnifiedInventoryEvent>, KV<String, SmartVelocityFn.Signal>> {
 
-    public static class Signal {
+    public static class Signal implements Serializable {
+        private static final long serialVersionUID = 1L;
+
         public String type; // "FAST" or "SLOW"
         public String window; // "1h" or "24h"
         public Long count;
