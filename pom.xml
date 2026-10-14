@@ -179,7 +179,7 @@
            <!-- <dependency>
                <groupId>com.google.protobuf</groupId>
                <artifactId>protobuf-java</artifactId>
-               <version>3.25.3</version>
+               <version>3.25.8</version>
                 <scope>runtime</scope>
            </dependency> -->
 <!--            <dependency>-->
@@ -227,14 +227,14 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.16.1</version>
+            <version>2.18.9</version>
         </dependency>
 
 
         <dependency>
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java</artifactId>
-            <version>3.25.3</version>
+            <version>3.25.8</version>
         </dependency>
 
         <!-- Adds a dependency on the Beam SDK. -->
