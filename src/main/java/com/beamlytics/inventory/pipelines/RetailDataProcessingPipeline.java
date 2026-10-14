@@ -17,6 +17,7 @@ import org.apache.beam.sdk.transforms.ParDo;
 import org.apache.beam.sdk.values.KV;
 import org.apache.beam.sdk.values.PCollection;
 import org.apache.beam.sdk.values.PCollectionList;
+import org.apache.beam.sdk.values.TypeDescriptor;
 import org.apache.beam.sdk.values.TypeDescriptors;
 import org.joda.time.Instant;
 import org.json.JSONObject;
@@ -111,7 +112,7 @@ public class RetailDataProcessingPipeline {
     PCollection<KV<String, UnifiedInventoryEvent>> keyedEvents = allEvents
         .apply("KeyByProductStore",
             MapElements
-                .into(TypeDescriptors.kvs(TypeDescriptors.strings(), TypeDescriptors.of(UnifiedInventoryEvent.class)))
+                .into(TypeDescriptors.kvs(TypeDescriptors.strings(), TypeDescriptor.of(UnifiedInventoryEvent.class)))
                 .via(event -> KV.of(getKey(event), event)));
 
     // 3. Main Branches

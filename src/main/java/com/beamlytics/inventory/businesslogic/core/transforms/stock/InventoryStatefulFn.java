@@ -1,6 +1,7 @@
 package com.beamlytics.inventory.businesslogic.core.transforms.stock;
 
 import com.beamlytics.inventory.businesslogic.core.model.UnifiedInventoryEvent;
+import org.apache.beam.sdk.state.StateSpec;
 import org.apache.beam.sdk.state.StateSpecs;
 import org.apache.beam.sdk.state.ValueState;
 import org.apache.beam.sdk.transforms.DoFn;

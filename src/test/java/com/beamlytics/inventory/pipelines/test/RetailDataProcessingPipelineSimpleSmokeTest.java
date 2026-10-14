@@ -51,6 +51,10 @@ public class RetailDataProcessingPipelineSimpleSmokeTest {
   @Test
   public void testPipeline() throws Exception {
 
+    // Construction-only smoke test: the pipeline writes to Redis, which is not available in CI,
+    // so it is built but never run.
+    pipeline.enableAbandonedNodeEnforcement(false);
+
     RetailDataProcessingPipeline retailDataProcessingPipeline = new RetailDataProcessingPipeline();
 
     PCollectionTuple inputs = pipeline.apply(new TestStreamGenerator());
